@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "933945619513",
+    "project_id": "filmflix-5af04",
+    "storage_bucket": "filmflix-5af04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933945619513:android:02895ff80d8042909b09e8",
+        "android_client_info": {
+          "package_name": "com.example.filmflix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933945619513-loeu1vhpjcc930muiaogp0fdaj37gtud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKz7TGbUr-Qav3ZVzcgo76IfTIOHhpwyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933945619513-loeu1vhpjcc930muiaogp0fdaj37gtud.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
