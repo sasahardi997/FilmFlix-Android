@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FilmFlix">
+        <activity android:name=".activities.PopularMoviesActivity"/>
+        <activity android:name=".activities.ChooseActivity" />
         <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,10 +25,17 @@
             android:name=".activities.Home"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.FilmFlix.NoActionBar" />
-        <activity android:name=".activities.LoginActivity">
-        </activity>
+        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.DetailActivity"
+            android:label="Movies"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:parentActivityName=".activities.PopularMoviesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.PopularMoviesActivity"/>
+        </activity>
     </application>
 
 </manifest>

@@ -22,14 +22,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText userMail, userPassword;
-    private TextView goToRegister;
+    private EditText userMail,userPassword;
     private Button btnLogin;
     private ProgressBar loginProgress;
-
     private FirebaseAuth mAuth;
-
-    private Intent homeActivity;
+   // private Intent HomeActivity;
+    private Intent popularMoviesActivity;
+    private ImageView loginPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,73 +37,79 @@ public class LoginActivity extends AppCompatActivity {
 
         userMail = findViewById(R.id.login_mail);
         userPassword = findViewById(R.id.login_password);
-        loginProgress = findViewById(R.id.loginProgress);
         btnLogin = findViewById(R.id.loginBtn);
-        goToRegister = findViewById(R.id.register);
+        loginProgress = findViewById(R.id.login_progress);
+        mAuth = FirebaseAuth.getInstance();
+        //HomeActivity = new Intent(this, Home.class);
+        popularMoviesActivity = new Intent(this, PopularMoviesActivity.class);
 
-        goToRegister.setOnClickListener(new View.OnClickListener() {
+        loginPhoto = findViewById(R.id.login_photo);
+        loginPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            public void onClick(View view) {
+
+                Intent registerActivity = new Intent(getApplicationContext(),RegisterActivity.class);
+                startActivity(registerActivity);
+                finish();
             }
         });
-
-        mAuth = FirebaseAuth.getInstance();
-        homeActivity = new Intent(this, Home.class);
 
         loginProgress.setVisibility(View.INVISIBLE);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 loginProgress.setVisibility(View.VISIBLE);
                 btnLogin.setVisibility(View.INVISIBLE);
 
                 final String mail = userMail.getText().toString();
-                final  String password = userPassword.getText().toString();
+                final String password = userPassword.getText().toString();
 
-                if(mail.isEmpty() || password.isEmpty()){
-                    showMessage("Please Verify All Fields");
-                    loginProgress.setVisibility(View.INVISIBLE);
+                if (mail.isEmpty() || password.isEmpty()) {
+                    showMessage("Please Verify All Field");
                     btnLogin.setVisibility(View.VISIBLE);
-                } else {
-                    signIn(mail, password);
+                    loginProgress.setVisibility(View.INVISIBLE);
+                }
+                else
+                {
+                    signIn(mail,password);
                 }
             }
         });
-
     }
 
     private void signIn(String mail, String password) {
-        mAuth.signInWithEmailAndPassword(mail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(mail,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     loginProgress.setVisibility(View.INVISIBLE);
                     btnLogin.setVisibility(View.VISIBLE);
                     updateUI();
-                } else {
+                }
+                else {
                     showMessage(task.getException().getMessage());
-                    loginProgress.setVisibility(View.INVISIBLE);
                     btnLogin.setVisibility(View.VISIBLE);
+                    loginProgress.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
 
     private void updateUI() {
-        startActivity(homeActivity);
+        startActivity(popularMoviesActivity);
         finish();
     }
 
-    private void showMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    private void showMessage(String text) {
+        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user != null){
+        if(user != null) {
+            //user is already connected  so we need to redirect him to home page
             updateUI();
         }
     }
