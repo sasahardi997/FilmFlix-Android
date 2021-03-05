@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.filmflix.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,6 +17,7 @@ public class ChooseActivity extends AppCompatActivity {
 
     Button chooseLogin, chooseRegister;
     private Intent popularMoviesActivity;
+    private ImageView gif;
 
     private FirebaseAuth mAuth;
 
@@ -26,6 +29,9 @@ public class ChooseActivity extends AppCompatActivity {
         popularMoviesActivity = new Intent(this, PopularMoviesActivity.class);
         chooseLogin = findViewById(R.id.choose_login);
         chooseRegister = findViewById(R.id.choose_register);
+
+        gif = findViewById(R.id.gif);
+        Glide.with(getApplicationContext()).load(R.drawable.pocetna2gif).into(gif);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -49,13 +55,13 @@ public class ChooseActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if(user != null) {
-            //user is already connected  so we need to redirect him to home page
-            updateUI();
-        }
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        FirebaseUser user = mAuth.getCurrentUser();
+//        if(user != null) {
+//            //user is already connected  so we need to redirect him to home page
+//            updateUI();
+//        }
+//    }
 }
