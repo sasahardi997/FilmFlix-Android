@@ -46,13 +46,10 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
     private RecyclerView recyclerView;
     private MoviesAdapter adapter;
     private List<Movie> movieList;
-    ProgressDialog pd;
     private SwipeRefreshLayout swipeContainer;
     private FavoriteDbHelper favoriteDbHelper;
     public static final String LOG_TAG = MoviesAdapter.class.getName();
     private AppCompatActivity activity = PopularMoviesActivity.this;
-
-    public static final String MyTheMovieDBApiToken="1232cc5ee97773fada2aa7c6dc03c083";
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -75,23 +72,12 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
     }
 
     private void initViews() {
-        pd = new ProgressDialog(this);
-        pd.setMessage("Fetching movies...");
-        pd.setCancelable(false);
-        pd.show();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         movieList = new ArrayList<>();
         adapter = new MoviesAdapter(this, movieList);
 
-//        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-//            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-//        } else {
-//            recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
-//        }
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -106,7 +92,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                 Toast.makeText(PopularMoviesActivity.this, "Movies Refreshed", Toast.LENGTH_SHORT).show();
             }
         });
-
         checkSortOrder();
     }
 
@@ -127,7 +112,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
         try{
             if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()){
                 Toast.makeText(getApplicationContext(), "Please obtain API Key firstly from themoviedb.org", Toast.LENGTH_SHORT).show();
-                pd.dismiss();
                 return;
             }
             Client Client = new Client();
@@ -143,7 +127,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                     if (swipeContainer.isRefreshing()){
                         swipeContainer.setRefreshing(false);
                     }
-                    pd.dismiss();
                 }
 
                 @Override
@@ -151,7 +134,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                     Log.d("Error", t.getMessage());
 //                    Toast.makeText(PopularMoviesActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
                     Toast.makeText(PopularMoviesActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    pd.dismiss();
                 }
             });
         }catch (Exception e){
@@ -164,7 +146,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
         try{
             if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()){
                 Toast.makeText(getApplicationContext(), "Please obtain API Key firstly from themoviedb.org", Toast.LENGTH_SHORT).show();
-                pd.dismiss();
                 return;
             }
             Client Client = new Client();
@@ -180,7 +161,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                     if (swipeContainer.isRefreshing()){
                         swipeContainer.setRefreshing(false);
                     }
-                    pd.dismiss();
                 }
 
                 @Override
@@ -188,7 +168,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                     Log.d("Error", t.getMessage());
 //                    Toast.makeText(PopularMoviesActivity.this, "Error Fetching Data!", Toast.LENGTH_SHORT).show();
                     Toast.makeText(PopularMoviesActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    pd.dismiss();
                 }
             });
         }catch (Exception e){

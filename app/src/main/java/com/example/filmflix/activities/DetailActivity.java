@@ -189,9 +189,6 @@ public class DetailActivity extends AppCompatActivity {
         favorite.setPosterPath(poster);
         favorite.setVoteAverage(Float.parseFloat(rate));
         favorite.setOverview(plotSynopsis.getText().toString().trim());
-
-        Toast.makeText(activity, poster, Toast.LENGTH_LONG).show();
-
         favoriteDbHelper.addFavorite(favorite);
     }
 }
