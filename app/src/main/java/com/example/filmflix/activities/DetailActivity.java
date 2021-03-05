@@ -17,10 +17,14 @@ import com.example.filmflix.R;
 import com.example.filmflix.adapters.TrailerAdapter;
 import com.example.filmflix.api.Client;
 import com.example.filmflix.api.Service;
+import com.example.filmflix.data.FavoriteDbHelper;
+import com.example.filmflix.model.Movie;
 import com.example.filmflix.model.Trailer;
 import com.example.filmflix.model.TrailerResponse;
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,10 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TrailerAdapter adapter;
     private List<Trailer> trailerList;
+
+    private FavoriteDbHelper favoriteDbHelper;
+    private Movie favorite;
+    private final AppCompatActivity activity = DetailActivity.this;
 
     @Override
     public void onCreate(Bundle saveInstanceState){
@@ -60,6 +68,8 @@ public class DetailActivity extends AppCompatActivity {
         String rating = getIntent().getExtras().getString("vote_average");
         String dateOfRelease = getIntent().getExtras().getString("release_date");
 
+        thumbnail = "https://image.tmdb.org/t/p/w500" + thumbnail;
+
         Glide.with(this)
                 .load(thumbnail)
                 .placeholder(R.drawable.load)
@@ -69,6 +79,29 @@ public class DetailActivity extends AppCompatActivity {
         plotSynopsis.setText(synopsis);
         userRating.setText(rating);
         releaseDate.setText(dateOfRelease);
+
+        MaterialFavoriteButton materialFavoriteButtonNice =
+                (MaterialFavoriteButton) findViewById(R.id.favorite_button);
+
+        materialFavoriteButtonNice.setOnFavoriteChangeListener(
+                new MaterialFavoriteButton.OnFavoriteChangeListener(){
+                    @Override
+                    public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite){
+                        if (favorite){
+                            saveFavorite();
+                            Snackbar.make(buttonView, "Added to Favorite",
+                                    Snackbar.LENGTH_SHORT).show();
+                        }else{
+                            int movie_id = getIntent().getExtras().getInt("id");
+                            favoriteDbHelper = new FavoriteDbHelper(DetailActivity.this);
+                            favoriteDbHelper.deleteFavorite(movie_id);
+                            Snackbar.make(buttonView, "Removed from Favorite",
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+        );
 
         initView();
     }
@@ -141,5 +174,24 @@ public class DetailActivity extends AppCompatActivity {
             Log.d("Error", e.getMessage());
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void saveFavorite(){
+        favoriteDbHelper = new FavoriteDbHelper(activity);
+        favorite = new Movie();
+
+        int movie_id = getIntent().getExtras().getInt("id");
+        String rate = getIntent().getExtras().getString("vote_average");
+        String poster = getIntent().getExtras().getString("poster_path");
+
+        favorite.setId(movie_id);
+        favorite.setOriginalTitle(nameOfMovie.getText().toString().trim());
+        favorite.setPosterPath(poster);
+        favorite.setVoteAverage(Float.parseFloat(rate));
+        favorite.setOverview(plotSynopsis.getText().toString().trim());
+
+        Toast.makeText(activity, poster, Toast.LENGTH_LONG).show();
+
+        favoriteDbHelper.addFavorite(favorite);
     }
 }

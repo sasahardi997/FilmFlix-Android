@@ -16,6 +16,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,6 +30,7 @@ import com.example.filmflix.R;
 import com.example.filmflix.adapters.MoviesAdapter;
 import com.example.filmflix.api.Client;
 import com.example.filmflix.api.Service;
+import com.example.filmflix.data.FavoriteDbHelper;
 import com.example.filmflix.model.Movie;
 import com.example.filmflix.model.MoviesResponse;
 
@@ -46,7 +48,9 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
     private List<Movie> movieList;
     ProgressDialog pd;
     private SwipeRefreshLayout swipeContainer;
+    private FavoriteDbHelper favoriteDbHelper;
     public static final String LOG_TAG = MoviesAdapter.class.getName();
+    private AppCompatActivity activity = PopularMoviesActivity.this;
 
     public static final String MyTheMovieDBApiToken="1232cc5ee97773fada2aa7c6dc03c083";
 
@@ -57,16 +61,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
         setContentView(R.layout.activity_popular_movies);
 
         initViews();
-
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.main_content);
-        swipeContainer.setColorSchemeColors(android.R.color.holo_orange_dark);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
-            @Override
-            public void onRefresh(){
-                initViews();
-                Toast.makeText(PopularMoviesActivity.this, "Movies Refreshed", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public Activity getActivity(){
@@ -85,7 +79,6 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
         pd.setMessage("Fetching movies...");
         pd.setCancelable(false);
         pd.show();
-
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         movieList = new ArrayList<>();
@@ -103,7 +96,31 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
+        favoriteDbHelper = new FavoriteDbHelper(activity);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.main_content);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh(){
+                initViews();
+                Toast.makeText(PopularMoviesActivity.this, "Movies Refreshed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         checkSortOrder();
+    }
+
+    private void initViews2(){
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        favoriteDbHelper = new FavoriteDbHelper(activity);
+
+        getAllFavorite();
     }
 
     private void loadJSON(){
@@ -210,9 +227,12 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                 this.getString(R.string.pref_sort_order_key),
                 this.getString(R.string.pref_most_popular)
         );
-        if(sortOrder.equals(this.getString(R.string.pref_most_popular))){
+        if(sortOrder.equals(this.getString(R.string.pref_most_popular))) {
             Log.d(LOG_TAG, "Sorting by most popular");
             loadJSON();
+        } else if(sortOrder.equals(this.getString(R.string.favorite))){
+            Log.d(LOG_TAG, "Sorting by favorite");
+            initViews2();
         } else {
             Log.d(LOG_TAG, "Sorting by vote average");
             loadJSON1();
@@ -225,5 +245,23 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
         if(movieList.isEmpty()){
             checkSortOrder();
         }
+    }
+
+    private void getAllFavorite(){
+        new AsyncTask<Void, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                movieList.clear();
+                movieList.addAll(favoriteDbHelper.getAllFavorite());
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                adapter.notifyDataSetChanged();
+            }
+        }.execute();
     }
 }
