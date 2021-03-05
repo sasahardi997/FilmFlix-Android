@@ -55,13 +55,12 @@ public class ChooseActivity extends AppCompatActivity {
         finish();
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        FirebaseUser user = mAuth.getCurrentUser();
-//        if(user != null) {
-//            //user is already connected  so we need to redirect him to home page
-//            updateUI();
-//        }
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null) {
+            updateUI();
+        }
+    }
 }

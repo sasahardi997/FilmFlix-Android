@@ -5,7 +5,10 @@
     <item
         android:id="@+id/menu_settings"
         android:title="@string/action_settings"
-        android:orderInCategory="100"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/menu_signout"
+        android:title="Sign out"
+        app:showAsAction="never"/>
 </menu>

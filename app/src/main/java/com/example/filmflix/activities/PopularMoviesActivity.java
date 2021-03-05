@@ -1,31 +1,30 @@
 package com.example.filmflix.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.filmflix.BuildConfig;
+import com.bumptech.glide.Glide;
 import com.example.filmflix.R;
 import com.example.filmflix.adapters.MoviesAdapter;
 import com.example.filmflix.api.Client;
@@ -33,6 +32,8 @@ import com.example.filmflix.api.Service;
 import com.example.filmflix.data.FavoriteDbHelper;
 import com.example.filmflix.model.Movie;
 import com.example.filmflix.model.MoviesResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +52,31 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
     public static final String LOG_TAG = MoviesAdapter.class.getName();
     private AppCompatActivity activity = PopularMoviesActivity.this;
 
+    public static final String MyTheMovieDBApiToken="1232cc5ee97773fada2aa7c6dc03c083";
+
+    private Toolbar toolbar;
+    private ImageView userImage;
+    private TextView activityTitle;
+
+    private FirebaseAuth mAuth;
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_popular_movies);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        userImage = findViewById(R.id.profile_image);
+        activityTitle = findViewById(R.id.activity_title);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null) {
+            Glide.with(this).load(user.getPhotoUrl()).into(userImage);
+        }
 
         initViews();
     }
@@ -110,14 +131,10 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
 
     private void loadJSON(){
         try{
-            if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()){
-                Toast.makeText(getApplicationContext(), "Please obtain API Key firstly from themoviedb.org", Toast.LENGTH_SHORT).show();
-                return;
-            }
             Client Client = new Client();
             Service apiService =
                     Client.getClient().create(Service.class);
-            Call<MoviesResponse> call = apiService.getPopularMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN);
+            Call<MoviesResponse> call = apiService.getPopularMovies(MyTheMovieDBApiToken);
             call.enqueue(new Callback<MoviesResponse>() {
                 @Override
                 public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -144,14 +161,10 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
 
     private void loadJSON1(){
         try{
-            if (BuildConfig.THE_MOVIE_DB_API_TOKEN.isEmpty()){
-                Toast.makeText(getApplicationContext(), "Please obtain API Key firstly from themoviedb.org", Toast.LENGTH_SHORT).show();
-                return;
-            }
             Client Client = new Client();
             Service apiService =
                     Client.getClient().create(Service.class);
-            Call<MoviesResponse> call = apiService.getTopRatedMovies(BuildConfig.THE_MOVIE_DB_API_TOKEN);
+            Call<MoviesResponse> call = apiService.getTopRatedMovies(MyTheMovieDBApiToken);
             call.enqueue(new Callback<MoviesResponse>() {
                 @Override
                 public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -183,11 +196,17 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menu_signout:
+                FirebaseAuth.getInstance().signOut();
+                Intent loginActivity = new Intent(getApplicationContext(),ChooseActivity.class);
+                startActivity(loginActivity);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -206,15 +225,18 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                 this.getString(R.string.pref_sort_order_key),
                 this.getString(R.string.pref_most_popular)
         );
-        if(sortOrder.equals(this.getString(R.string.pref_most_popular))) {
+        if (sortOrder.equals(this.getString(R.string.pref_most_popular))) {
             Log.d(LOG_TAG, "Sorting by most popular");
             loadJSON();
-        } else if(sortOrder.equals(this.getString(R.string.favorite))){
+            activityTitle.setText("Most Popular Movies");
+        } else if (sortOrder.equals(this.getString(R.string.favorite))){
             Log.d(LOG_TAG, "Sorting by favorite");
             initViews2();
-        } else {
+            activityTitle.setText("Your Favorite Movies");
+        } else{
             Log.d(LOG_TAG, "Sorting by vote average");
             loadJSON1();
+            activityTitle.setText("The Highest Rated Movies ");
         }
     }
 
