@@ -16,6 +16,15 @@
         android:gravity="right">
 
         <Button
+            android:id="@+id/guest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:text="Use as guest"
+            android:textColor="@color/white"
+            android:layout_marginEnd="20sp"/>
+
+        <Button
             android:id="@+id/choose_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,10 +43,9 @@
 
     </LinearLayout>
 
-
     <ImageView
         android:id="@+id/gif"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_gravity="center"/>

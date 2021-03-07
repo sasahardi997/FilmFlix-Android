@@ -1,7 +1,10 @@
 package com.example.filmflix.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +28,8 @@ import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +50,11 @@ public class DetailActivity extends AppCompatActivity {
     private Movie favorite;
     private final AppCompatActivity activity = DetailActivity.this;
 
+    private Button loginBtn;
+
+    private FirebaseAuth mAuth;
+    FirebaseUser user;
+
     @Override
     public void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -53,6 +63,9 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
 
         initCollapsingToolbar();
 
@@ -82,6 +95,21 @@ public class DetailActivity extends AppCompatActivity {
 
         MaterialFavoriteButton materialFavoriteButtonNice =
                 (MaterialFavoriteButton) findViewById(R.id.favorite_button);
+
+        loginBtn = findViewById(R.id.login_btn);
+
+        if(user != null){
+            materialFavoriteButtonNice.setVisibility(View.VISIBLE);
+        } else {
+            loginBtn.setVisibility(View.VISIBLE);
+        }
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DetailActivity.this, ChooseActivity.class));
+            }
+        });
 
         materialFavoriteButtonNice.setOnFavoriteChangeListener(
                 new MaterialFavoriteButton.OnFavoriteChangeListener(){

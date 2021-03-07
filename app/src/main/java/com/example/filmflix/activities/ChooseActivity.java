@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class ChooseActivity extends AppCompatActivity {
 
-    Button chooseLogin, chooseRegister;
+    Button chooseLogin, chooseRegister, guestBtn;
     private Intent popularMoviesActivity;
     private ImageView gif;
 
@@ -29,11 +29,19 @@ public class ChooseActivity extends AppCompatActivity {
         popularMoviesActivity = new Intent(this, PopularMoviesActivity.class);
         chooseLogin = findViewById(R.id.choose_login);
         chooseRegister = findViewById(R.id.choose_register);
+        guestBtn = findViewById(R.id.guest);
 
         gif = findViewById(R.id.gif);
-        Glide.with(getApplicationContext()).load(R.drawable.pocetna2gif).into(gif);
+        Glide.with(getApplicationContext()).load(R.drawable.pocetna12).into(gif);
 
         mAuth = FirebaseAuth.getInstance();
+
+        guestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChooseActivity.this, PopularMoviesActivity.class));
+            }
+        });
 
         chooseLogin.setOnClickListener(new View.OnClickListener() {
             @Override

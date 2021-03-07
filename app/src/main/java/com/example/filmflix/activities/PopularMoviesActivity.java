@@ -20,6 +20,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,9 +57,10 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
 
     private Toolbar toolbar;
     private ImageView userImage;
-    private TextView activityTitle;
+    private TextView activityTitle, loginBtn;
 
     private FirebaseAuth mAuth;
+    FirebaseUser user;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -71,12 +73,23 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
 
         userImage = findViewById(R.id.profile_image);
         activityTitle = findViewById(R.id.activity_title);
+        loginBtn = findViewById(R.id.login_btn);
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
+        user = mAuth.getCurrentUser();
         if(user != null) {
             Glide.with(this).load(user.getPhotoUrl()).into(userImage);
         }
+        if(user == null){
+            loginBtn.setVisibility(View.VISIBLE);
+        }
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PopularMoviesActivity.this, ChooseActivity.class));
+            }
+        });
 
         initViews();
     }
@@ -191,7 +204,12 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if(user != null){
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_main_guest, menu);
+        }
+
         return  true;
     }
 
@@ -203,10 +221,15 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                 startActivity(intent);
                 return true;
             case R.id.menu_signout:
-                FirebaseAuth.getInstance().signOut();
-                Intent loginActivity = new Intent(getApplicationContext(),ChooseActivity.class);
-                startActivity(loginActivity);
-                finish();
+                if(user != null){
+                    FirebaseAuth.getInstance().signOut();
+                    Intent loginActivity = new Intent(getApplicationContext(),ChooseActivity.class);
+                    startActivity(loginActivity);
+                    finish();
+                } else {
+                    startActivity(new Intent(PopularMoviesActivity.this, ChooseActivity.class));
+                    return  true;
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
