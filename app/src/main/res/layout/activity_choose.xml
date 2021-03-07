@@ -13,14 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="right">
+        android:gravity="center">
 
         <Button
             android:id="@+id/guest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            android:text="Use as guest"
+            android:background="@drawable/reg_btn_style"
+            android:text="Guest"
+            android:textSize="14sp"
+            android:padding="5dp"
             android:textColor="@color/white"
             android:layout_marginEnd="20sp"/>
 
@@ -29,7 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20sp"
-            android:background="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:background="@drawable/reg_btn_style"
             android:textColor="@color/white"
             android:text="Login"/>
 
@@ -37,9 +41,11 @@
             android:id="@+id/choose_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:background="@drawable/reg_btn_style"
             android:textColor="@color/white"
-            android:text="Registration"/>
+            android:text="Register"/>
 
     </LinearLayout>
 

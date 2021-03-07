@@ -11,12 +11,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="@dimen/card_margin"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/black"
         android:elevation="3dp"
         android:layout_marginBottom="15dp"
         app:cardCornerRadius="@dimen/card_movie_radius">
 
         <RelativeLayout
+            android:background="@color/black"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -37,21 +38,37 @@
                 android:paddingLeft="@dimen/movie_title_padding"
                 android:paddingRight="@dimen/movie_title_padding"
                 android:paddingTop="@dimen/movie_title_padding"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/movie_titple"/>
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
 
-            <TextView
-                android:id="@+id/userrating"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/title"
-                android:paddingLeft="@dimen/movie_title_padding"
-                android:paddingRight="@dimen/movie_title_padding"
-                android:paddingBottom="@dimen/user_rating_padding_bottom"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:textSize="@dimen/user_rating"
-                android:text="ocena"
-                android:textColor="@color/colorPrimary"/>
+                android:layout_below="@id/title">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_star"
+                    android:layout_below="@id/title"/>
+
+                <TextView
+                    android:id="@+id/userrating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/movie_title_padding"
+                    android:paddingRight="@dimen/movie_title_padding"
+                    android:paddingBottom="@dimen/user_rating_padding_bottom"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:text="ocena"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
 
         </RelativeLayout>
 
