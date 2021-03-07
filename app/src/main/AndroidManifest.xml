@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.PopularMoviesActivity"/>
+        <activity android:name=".activities.SearchActivity"></activity>
+        <activity android:name=".activities.PopularMoviesActivity" />
         <activity android:name=".activities.ChooseActivity" />
         <activity android:name=".activities.SplashActivity">
             <intent-filter>
@@ -27,15 +28,16 @@
             android:theme="@style/Theme.FilmFlix.NoActionBar" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.SettingsActivity"/>
+        <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.DetailActivity"
+        <activity
+            android:name=".activities.DetailActivity"
             android:label="Movies"
-            android:theme="@style/Theme.Design.NoActionBar"
-            android:parentActivityName=".activities.PopularMoviesActivity">
+            android:parentActivityName=".activities.PopularMoviesActivity"
+            android:theme="@style/Theme.Design.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.PopularMoviesActivity"/>
+                android:value=".activities.PopularMoviesActivity" />
         </activity>
     </application>
 

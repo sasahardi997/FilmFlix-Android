@@ -226,11 +226,18 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                     Intent loginActivity = new Intent(getApplicationContext(),ChooseActivity.class);
                     startActivity(loginActivity);
                     finish();
+                    return true;
                 } else {
                     startActivity(new Intent(PopularMoviesActivity.this, ChooseActivity.class));
                     return  true;
                 }
-                return true;
+            case R.id.menu_search:
+                if(user != null){
+                    startActivity(new Intent(PopularMoviesActivity.this, SearchActivity.class));
+                    return true;
+                } else {
+                    startActivity(new Intent(PopularMoviesActivity.this, ChooseActivity.class));
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
