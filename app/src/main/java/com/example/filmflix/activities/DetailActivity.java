@@ -50,7 +50,9 @@ public class DetailActivity extends AppCompatActivity {
     private Movie favorite;
     private final AppCompatActivity activity = DetailActivity.this;
 
-    private Button loginBtn;
+    String imageUrl;
+
+    private Button loginBtn, addPost;
 
     private FirebaseAuth mAuth;
     FirebaseUser user;
@@ -74,6 +76,11 @@ public class DetailActivity extends AppCompatActivity {
         plotSynopsis = (TextView) findViewById(R.id.plotsynopsis);
         userRating = (TextView) findViewById(R.id.userrating);
         releaseDate = (TextView) findViewById(R.id.releasedate);
+        addPost = findViewById(R.id.add_post);
+
+        if(user != null){
+            addPost.setVisibility(View.VISIBLE);
+        }
 
         String thumbnail = getIntent().getExtras().getString("poster_path");
         String movieName = getIntent().getExtras().getString("original_title");
@@ -82,6 +89,18 @@ public class DetailActivity extends AppCompatActivity {
         String dateOfRelease = getIntent().getExtras().getString("release_date");
 
         thumbnail = "https://image.tmdb.org/t/p/w500" + thumbnail;
+        imageUrl = thumbnail;
+
+        addPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailActivity.this, AddPostActivity.class);
+                intent.putExtra("thumbnail", imageUrl);
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);;
+            }
+        });
 
         Glide.with(this)
                 .load(thumbnail)

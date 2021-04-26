@@ -238,6 +238,9 @@ public class PopularMoviesActivity extends AppCompatActivity implements SharedPr
                 } else {
                     startActivity(new Intent(PopularMoviesActivity.this, ChooseActivity.class));
                 }
+            case R.id.blog:
+                startActivity(new Intent(this, BlogActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
