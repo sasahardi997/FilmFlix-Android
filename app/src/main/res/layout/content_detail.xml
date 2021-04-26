@@ -58,6 +58,7 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/title"
+                        android:layout_marginRight="10dp"
                         android:background="@color/colorPrimaryDark"/>
 
                     <Button
@@ -66,13 +67,14 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/title"
+                        app:layout_constraintTop_toBottomOf="@id/favorite_button"
                         android:text="Login to save Movies"
                         android:paddingStart="7dp"
                         android:paddingEnd="7dp"
                         android:textColor="@color/white"
                         android:background="@drawable/reg_btn_style"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:layout_marginLeft="10dp"/>
 
                     <Button
                         android:id="@+id/add_post"
@@ -80,12 +82,13 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/title"
+                        app:layout_constraintTop_toBottomOf="@id/favorite_button"
                         android:text="Add post"
                         android:paddingStart="7dp"
                         android:paddingEnd="7dp"
                         android:textColor="@color/white"
                         android:background="@drawable/reg_btn_style"
+                        android:layout_marginLeft="10dp"
                         android:visibility="gone"/>
 
                 </LinearLayout>

@@ -77,9 +77,12 @@ public class DetailActivity extends AppCompatActivity {
         userRating = (TextView) findViewById(R.id.userrating);
         releaseDate = (TextView) findViewById(R.id.releasedate);
         addPost = findViewById(R.id.add_post);
+        loginBtn = findViewById(R.id.login_btn);
 
         if(user != null){
             addPost.setVisibility(View.VISIBLE);
+        } else {
+            loginBtn.setVisibility(View.VISIBLE);
         }
 
         String thumbnail = getIntent().getExtras().getString("poster_path");
@@ -96,6 +99,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DetailActivity.this, AddPostActivity.class);
                 intent.putExtra("thumbnail", imageUrl);
+                intent.putExtra("title", movieName);
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);;

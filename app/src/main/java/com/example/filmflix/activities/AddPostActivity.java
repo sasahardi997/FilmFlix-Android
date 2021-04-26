@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +30,11 @@ import com.google.firebase.storage.UploadTask;
 public class AddPostActivity extends AppCompatActivity {
 
     ImageView movieImage;
-    EditText movieTitle, movieDescription, movieIs;
+    EditText movieDescription, movieIs;
+    TextView movieTitle;
     Button addPost;
     String thumbnail;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +43,22 @@ public class AddPostActivity extends AppCompatActivity {
 
         movieImage = findViewById(R.id.imageView);
         movieTitle = findViewById(R.id.title);
-        movieDescription = findViewById(R.id.descrition);
+        movieDescription = findViewById(R.id.description);
         movieIs = findViewById(R.id.movie_is);
         addPost = findViewById(R.id.add_post);
+        ratingBar = findViewById(R.id.rating);
 
         thumbnail = getIntent().getExtras().getString("thumbnail");
         Glide.with(AddPostActivity.this).load(thumbnail).into(movieImage);
+        final String title = getIntent().getExtras().getString("title");
+        movieTitle.setText(title);
 
         addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!movieTitle.getText().toString().isEmpty() && !movieDescription.getText().toString().isEmpty() && !thumbnail.equals("")){
 
-                    Post post = new Post(movieTitle.getText().toString(), movieDescription.getText().toString(), thumbnail, movieIs.getText().toString());
+                    Post post = new Post(title, movieDescription.getText().toString(), thumbnail, movieIs.getText().toString(), ratingBar.getRating());
                     addPost(post);
 
                 } else {

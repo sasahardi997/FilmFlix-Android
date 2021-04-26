@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.title.setText(mData.get(position).getTitle());
+        holder.description.setText(mData.get(position).getDescription());
+        holder.ratingBar.setRating(mData.get(position).getRating());
 
         Glide.with(mContext).load(mData.get(position).getPicture()).into(holder.imgPost);
     }
@@ -48,14 +51,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        TextView title;
+        TextView title, description;
         ImageView imgPost;
+        RatingBar ratingBar;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.row_title);
             imgPost = itemView.findViewById(R.id.row_image);
+            description = itemView.findViewById(R.id.description);
+            ratingBar = itemView.findViewById(R.id.rating);
         }
     }
 }
